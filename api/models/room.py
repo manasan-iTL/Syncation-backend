@@ -5,7 +5,7 @@ from api.db import Base
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "rooms"
 
     id = Column(Integer, primary_key=True)
     host_id = Column(Integer, primary_key=True)
