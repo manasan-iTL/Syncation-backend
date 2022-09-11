@@ -8,7 +8,7 @@ from api.db import get_db
 router = APIRouter()
 
 @router.post("/user")
-async def create_user(request: room_schemas.UserBase, db: AsyncSession = Depends(get_db)):
+async def create_user(request: room_schemas.UserRequest, db: AsyncSession = Depends(get_db)):
     return await room_crud.create_user(db, request)
 
 @router.get("/user/{user_id}")
