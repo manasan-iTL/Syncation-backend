@@ -77,17 +77,20 @@ async def enter_room(db: AsyncSession, room_original: room_model.Room, user_orig
     await db.commit()
     await db.refresh(room_original)
     await db.refresh(user_original)
-    obj = await get_room_users_and_num(room_original, user_original)
+    obj = await get_room_users_and_num(db, room_original, user_original)
     return {"message": "succes", "num": obj["num"], "users": obj["users"]}
     # 部屋にいるuserの数、一覧を返す
 
-async def get_room_users_and_num(db: AsyncSession, room_original: room_model.Room):
-    q = select(room_model.User).filter(room_model.User.room_id==room_original.id)
-    result = await db.execute(q)
-    users = result.all()
+async def get_room_users_and_num(db: AsyncSession, room_original: room_model.Room, user_original: room_model.User):
+    q_user = select(room_model.User).filter(room_model.User.room_id==room_original.id)
+    print("q_user", q_user)
+    result_user = await db.execute(q_user)
+    print("result_user", result_user)
+    users = result_user.all()
+    print("users", users)
 
-    q = select(room_model.Room).filter(room_model.Room.id==room_original.id)
-    result = await db.execute(q)
-    room = result.first()
+    q_room = select(room_model.Room).filter(room_model.Room.id==room_original.id)
+    result_room = await db.execute(q_room)
+    room = result_room.first()
     num = room[0].num
     return {"num": num, "users": users}
