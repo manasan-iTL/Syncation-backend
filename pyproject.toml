@@ -11,6 +11,7 @@ uvicorn = {extras = ["standard"], version = "^0.18.2"}
 SQLAlchemy = "^1.4.40"
 aiomysql = "^0.1.1"
 SQLAlchemy-Utils = "^0.38.3"
+python-socketio = "^5.7.1"
 
 [tool.poetry.dev-dependencies]
 pytest-asyncio = "^0.19.0"

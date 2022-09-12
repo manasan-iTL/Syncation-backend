@@ -70,3 +70,4 @@ async def enter_room(room_id: str, user_id: str, db: AsyncSession = Depends(get_
     if user.room_id == room.id:
         raise HTTPException(status_code=400, detail="Already in the room")
     return await room_crud.enter_room(db, room_original=room, user_original=user)
+
