@@ -15,7 +15,7 @@ class Room(Base):
     host_id = Column(UUIDType(binary=False))
     title = Column(String(1024))
     timer = Column(String(1024))
-    mode = Column(String(1024))
+    mode = Column(String(1024), default="chat_always")
     user = relationship("User", back_populates="room", uselist=False)
     
 
@@ -23,11 +23,9 @@ class User(Base):
     __tablename__ = "user"
     id = Column(UUIDType(binary=False), default=uuid.uuid4, unique=True, primary_key=True)
     username = Column(String(1024))
-    status = Column(String(1024))
+    status = Column(String(1024), default="player")
     room_id = Column(UUIDType(binary=False), ForeignKey("room.id"), nullable=True)
     room = relationship("Room", back_populates="user", uselist=False)
-    @property
-    def attr(self):
-        return self._attr
+ 
 
 

@@ -19,10 +19,10 @@ async def create_user(db: AsyncSession, request: room_schemas.UserRequest):
     await db.refresh(new_user)
     return new_user.id
 
-async def get_user(db: AsyncSession, id: str):
+async def get_user(db: AsyncSession, user_id: str):
     q = select(
         room_model.User,
-    ).filter(room_model.User.id == id )
+    ).filter(room_model.User.id == user_id )
     result = await db.execute(q)
     user = result.first()
     return user[0] if user is not None else None

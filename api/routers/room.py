@@ -11,9 +11,11 @@ router = APIRouter()
 
 @router.post("/host")
 async def create_host(request_user: room_schemas.UserRequest, request_room: room_schemas.RoomRequest, db: AsyncSession = Depends(get_db)):
-    user_id = await room_crud.create_user(db, request_user)
+    user_id = await room_crud.create_user(db, request=request_user)
     request_room.host_id = user_id
-    room_id = await room_crud.create_room(db, request_room)
+    room_id = await room_crud.create_room(db, request=request_room)
+    request_user.room_id  = room_id
+    user = await update_user(db=db, user_id=user_id, user_body=request_user)
     return {"user_id": user_id, "room_id": room_id}
 
 @router.get("/users")
@@ -30,7 +32,7 @@ async def get_user(user_id: str, db: AsyncSession = Depends(get_db)):
 
 @router.put("/user/{user_id}")
 async def update_user(user_id: str, user_body: room_schemas.UserRequest, db: AsyncSession = Depends(get_db)):
-    user = await room_crud.get_user(db, id=user_id)
+    user = await room_crud.get_user(db, user_id=user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return await room_crud.update_user(db, request=user_body, original=user)
