@@ -17,5 +17,4 @@ class Done(Base):
     __tablename__ = "dones"
 
     id = Column(Integer, ForeignKey("tasks.id"), primary_key=True)
-
     task = relationship("Task", back_populates="done")
