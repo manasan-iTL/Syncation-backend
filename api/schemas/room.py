@@ -1,16 +1,17 @@
 from api.models.room import Room
 from pydantic import BaseModel
 
-class RoomBase(BaseModel):
+class RoomRequest(BaseModel):
     host_id: str
     timer: str
     num: int
     title: str
     mode: str
+    class Config():
+        orm_mode = True
     # room作成時idは不要
-
-
-class Room(RoomBase):
+        
+class Room(BaseModel):
     id: str 
     host_id: str
     timer: str
