@@ -1,13 +1,11 @@
 from api.models.room import Room
 from pydantic import BaseModel
 
-class RoomBase(BaseModel):
+class RoomRequest(BaseModel):
     host_id: str
     timer: str
     title: str
     mode: str
-    class Config():
-        orm_mode = True
 
 class Room(BaseModel):
     id: str
@@ -21,7 +19,7 @@ class Room(BaseModel):
 class UserRequest(BaseModel):
     username: str
     status: str
-    room_id: int
+    room_id: str
     class Config():
         orm_mode = True
 
