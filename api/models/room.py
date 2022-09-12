@@ -1,6 +1,7 @@
 from email.policy import default
 from operator import index
-from sqlalchemy import Column, Integer, String, ForeignKey
+from xmlrpc.client import Boolean
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, backref
 import uuid
 from sqlalchemy_utils import UUIDType
@@ -13,8 +14,9 @@ class Room(Base):
     
     id = Column(UUIDType(binary=False), default=uuid.uuid4, unique=True, primary_key=True)
     host_id = Column(UUIDType(binary=False))
-    title = Column(String(1024))
+    title = Column(String(1024), default="しんけーしょん るーむ1")
     timer = Column(String(1024))
+    num = Column(Integer, default=0)
     mode = Column(String(1024), default="chat_always")
     user = relationship("User", back_populates="room", uselist=False)
     
@@ -22,9 +24,10 @@ class Room(Base):
 class User(Base):
     __tablename__ = "user"
     id = Column(UUIDType(binary=False), default=uuid.uuid4, unique=True, primary_key=True)
-    username = Column(String(1024))
+    username = Column(String(1024), default="Guest")
     status = Column(String(1024), default="player")
     room_id = Column(UUIDType(binary=False), ForeignKey("room.id"), nullable=True)
+    is_host = Column(Boolean, default=False)
     room = relationship("Room", back_populates="user", uselist=False)
  
 

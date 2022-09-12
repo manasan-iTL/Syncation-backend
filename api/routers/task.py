@@ -13,7 +13,6 @@ router = APIRouter()
 async def list_tasks(db: AsyncSession = Depends(get_db)):
   return await task_crud.get_tasks_with_done(db)
 
-
 @router.post("/tasks", response_model=task_schema.TaskCreateResponse)
 async def create_tasks(
   task_body: task_schema.TaskCreate, db: AsyncSession = Depends(get_db)
