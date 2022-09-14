@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class RoomRequest(BaseModel):
     host_id: str
     timer: str
+    milisecond: str
     num: int
     title: str
     mode: str
@@ -11,13 +12,8 @@ class RoomRequest(BaseModel):
         orm_mode = True
     # room作成時idは不要
         
-class Room(BaseModel):
+class Room(RoomRequest):
     id: str 
-    host_id: str
-    timer: str
-    num: int
-    title: str
-    mode: str
     class Config():
         orm_mode = True
 
