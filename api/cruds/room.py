@@ -134,6 +134,7 @@ async def register_vote(db: AsyncSession, request: room_schemas.VoteRequest):
         room_id = request.room_id,
         time = request.time,
         turn = request.turn,
+        rest_flag = request.rest_flag,
     )
     db.add(new_vote)
     await db.commit()

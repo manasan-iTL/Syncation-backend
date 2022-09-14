@@ -46,7 +46,7 @@ class ProgressBase(BaseModel):
 class VoteRequest(BaseModel):
     time: str
     room_id: str
-    rest_flag: str
+    rest_flag: bool
     turn: int
     class Config():
         orm_mode = True

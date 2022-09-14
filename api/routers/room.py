@@ -115,11 +115,7 @@ async def leave_room(room_id: str, user_id: str, db: AsyncSession = Depends(get_
 @router.post("/room/{room_id}/vote")
 async def register_vote(room_id: str, request: room_schemas.VoteRequest, db: AsyncSession = Depends(get_db)):
     if request.rest_flag is False:
-        request.time = str(0)
-    if request.rest_flag is None:
-        request.time = str(0)
-    if request.time is None:
-        request.time = str(0)
+        request.time = str(0)   
     request.room_id = room_id
     return await room_crud.register_vote(db, request)
 
