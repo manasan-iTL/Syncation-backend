@@ -25,12 +25,8 @@ class UserRequest(BaseModel):
     class Config():
         orm_mode = True
 
-class User(BaseModel):
+class User(UserRequest):
     id: str
-    username: str
-    status: str
-    room_id: str
-    is_host : bool
     class Config():
         orm_mode = True
         
@@ -47,13 +43,11 @@ class ProgressBase(BaseModel):
     class Config():
         orm_mode = True
 
-class VoteBase(BaseModel):
-    id: str
+class VoteRequest(BaseModel):
     time: str
     room_id: str
+    rest_flag: bool
+    turn: int
     class Config():
         orm_mode = True
 
-class RestBase(BaseModel):
-    time: str
-    res_flag: str

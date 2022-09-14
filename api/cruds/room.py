@@ -128,3 +128,22 @@ async def get_room_users_and_num(db: AsyncSession, room_original: room_model.Roo
     room = result_room.first()
     num = room[0].num
     return {"num": num, "users": users}
+
+async def register_vote(db: AsyncSession, request: room_schemas.VoteRequest):
+    new_vote = room_model.Vote(
+        room_id = request.room_id,
+        time = request.time,
+        turn = request.turn,
+        rest_flag = request.rest_flag,
+    )
+    db.add(new_vote)
+    await db.commit()
+    await db.refresh(new_vote)
+    return new_vote
+
+async def get_vote_by_turn(db: AsyncSession, room_id: str, turn: int):
+    q = select(room_model.Vote).filter(room_model.Vote.room_id == room_id, room_model.Vote.turn == turn)
+    result = await db.execute(q)
+    votes = result.all()
+    print(votes)
+    return votes if votes is not None else None
