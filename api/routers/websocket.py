@@ -22,7 +22,12 @@ async def join_room(sid, data):
     print(data["roomId"])
     sio.enter_room(sid, data["roomId"])
     await sio.emit("joined_room", {"id": sid, "username": data["username"]}, room=data["roomId"])
-    # return {"result": "Succes"}
+    return {"result": "Success"}
+
+@sio.event
+async def send_time(sid, data):
+    print(data["type"] + "の時間：" + data["time"])
+    await sio.emit("receive_time", {"type": data["type"], "time": data["time"]}, room=data["roomId"])
 
 # @sio.event
 # async def entered_room(sid, data):
