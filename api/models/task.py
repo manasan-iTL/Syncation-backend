@@ -9,6 +9,7 @@ class Task(Base):
 
     id = Column(Integer, primary_key=True)
     title = Column(String(1024))
+    user_id = Column(String(1024))
 
     done = relationship("Done", back_populates="task")
 
