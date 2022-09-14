@@ -112,11 +112,12 @@ async def leave_room(room_id: str, user_id: str, db: AsyncSession = Depends(get_
         raise HTTPException(status_code=400, detail="Diffrent room")
     return await room_crud.leave_room(db, room_original=room, user_original=user)
 
-@router.post("/room/{room_id}/vote")
-async def register_vote(room_id: str, request: room_schemas.VoteRequest, db: AsyncSession = Depends(get_db)):
+@router.post("/room/{room_id}/vote/{turn}")
+async def register_vote(room_id: str, turn: int,  request: room_schemas.VoteRequest, db: AsyncSession = Depends(get_db)):
     if request.rest_flag is False:
         request.time = str(0)   
     request.room_id = room_id
+    request.turn = turn
     return await room_crud.register_vote(db, request)
 
 @router.get("/room/{room_id}/vote/{turn}")
