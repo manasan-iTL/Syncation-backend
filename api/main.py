@@ -1,11 +1,10 @@
 from fastapi import FastAPI
-from api.routers import room, user, task, done, websocket
+from api.routers import room, task, done, websocket
 from fastapi.middleware.cors import CORSMiddleware
 import socketio
 
 app = FastAPI()
 app.include_router(room.router)
-app.include_router(user.router)
 app.include_router(task.router)
 app.include_router(done.router)
 

@@ -7,7 +7,6 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.engine import Result
-from copy import deepcopy
 
 async def create_user(db: AsyncSession, request: room_schemas.UserRequest):
     new_user = room_model.User(
@@ -38,10 +37,18 @@ async def list_user(db: AsyncSession) -> List[room_schemas.User]:
 async def update_user(
     db: AsyncSession, request: room_schemas.UserRequest, original: room_model.User) -> room_model.User:
     original.room_id = request.room_id
+    original.username = request.username
+    original.status = request.status
+    original.is_host = request.is_host
     db.add(original)
     await db.commit()
     await db.refresh(original)
     return original
+
+async def delete_user(db: AsyncSession, original: room_model.User):
+    await db.delete(original)
+    await db.commit()
+
 
 async def create_room(db: AsyncSession, request: room_schemas.RoomRequest):
     new_room = room_model.Room(
@@ -68,6 +75,24 @@ async def list_room(db: AsyncSession) -> List[room_schemas.Room]:
     rooms = result.all()
     return rooms
 
+async def update_room(
+    db: AsyncSession, request: room_schemas.RoomRequest, original: room_model.Room) -> room_model.Room:
+    print(original)
+    original.host_id = request.host_id
+    original.title = request.title
+    original.timer = request.timer
+    original.num = request.num
+    original.mode = request.mode
+    original.milisecond = request.milisecond
+    db.add(original)
+    await db.commit()
+    await db.refresh(original)
+    return original
+
+async def delete_room(db: AsyncSession, original: room_model.Room):
+    await db.delete(original)
+    await db.commit()
+
 async def enter_room(db: AsyncSession, room_original: room_model.Room, user_original: room_model.User):
 
     user_original.room_id = room_original.id
@@ -81,13 +106,22 @@ async def enter_room(db: AsyncSession, room_original: room_model.Room, user_orig
     return {"message": "succes", "num": obj["num"], "users": obj["users"]}
     # 部屋にいるuserの数、一覧を返す
 
+async def leave_room(db: AsyncSession, room_original: room_model.Room, user_original: room_model.User):
+
+    user_original.room_id = None
+    room_original.num -= 1
+    db.add(room_original)
+    db.add(user_original)
+    await db.commit()
+    await db.refresh(room_original)
+    await db.refresh(user_original)
+    obj = await get_room_users_and_num(db, room_original)
+    return {"message": "succes", "num": obj["num"], "users": obj["users"]}
+
 async def get_room_users_and_num(db: AsyncSession, room_original: room_model.Room):
     q_user = select(room_model.User).filter(room_model.User.room_id==room_original.id)
-    print("q_user", q_user)
     result_user = await db.execute(q_user)
-    print("result_user", result_user)
     users = result_user.all()
-    print("users", users)
 
     q_room = select(room_model.Room).filter(room_model.Room.id==room_original.id)
     result_room = await db.execute(q_room)

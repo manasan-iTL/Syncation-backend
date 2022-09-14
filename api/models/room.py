@@ -16,10 +16,11 @@ class Room(Base):
     host_id = Column(UUIDType(binary=False))
     title = Column(String(1024), default="しんけーしょん るーむ1")
     timer = Column(String(1024))
+    milisecond = Column(String(1024), default="00")
     num = Column(Integer, default=0)
     mode = Column(String(1024), default="chat_always")
     user = relationship("User", back_populates="room", uselist=False)
-    
+    vote = relationship("Vote", back_populates="room", uselist=False)
 
 class User(Base):
     __tablename__ = "user"
@@ -30,4 +31,11 @@ class User(Base):
     is_host = Column(Boolean, default=False)
     room = relationship("Room", back_populates="user", uselist=False)
  
+class Vote(Base):
+    __tablename__ = "vote"
+    id = Column(UUIDType(binary=False), default=uuid.uuid4, unique=True, primary_key=True)
+    time = Column(String(1024))
+    rest_flag = Column(Boolean, default=False)
+    room_id = Column(UUIDType(binary=False), ForeignKey("room.id"), nullable=True)
+    room = relationship("Room", back_populates="vote", uselist=False)
 
