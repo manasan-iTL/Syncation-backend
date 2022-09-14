@@ -37,5 +37,6 @@ class Vote(Base):
     time = Column(String(1024))
     rest_flag = Column(Boolean, default=False)
     room_id = Column(UUIDType(binary=False), ForeignKey("room.id"), nullable=True)
+    turn = Column(Integer)
     room = relationship("Room", back_populates="vote", uselist=False)
 

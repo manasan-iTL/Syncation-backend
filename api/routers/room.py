@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 import api.schemas.room as room_schemas 
@@ -5,7 +6,7 @@ import api.cruds.room as room_crud
 import api.models.room as room_model
 from api.db import get_db
 from typing import List
-
+import random
 
 router = APIRouter()
 
@@ -74,7 +75,6 @@ async def delete_room(room_id: int, db: AsyncSession = Depends(get_db)):
 
     return await room_crud.delete_room(db, original=room)
 
-
 @router.get("/room/{room_id}")
 async def get_room(room_id: str, db: AsyncSession = Depends(get_db)):
     return await room_crud.get_room(db, room_id)
@@ -85,7 +85,6 @@ async def get_room(room_id: str, db: AsyncSession = Depends(get_db)):
     if room is None:
         raise HTTPException(status_code=404, detail="Room not found")
     return await room_crud.get_room_users_and_num(db, room_original=room)
-
 
 @router.post("/enter/{room_id}/{user_id}")
 async def enter_room(room_id: str, user_id: str, db: AsyncSession = Depends(get_db)):
@@ -112,3 +111,22 @@ async def leave_room(room_id: str, user_id: str, db: AsyncSession = Depends(get_
     elif user.room_id != room.id:
         raise HTTPException(status_code=400, detail="Diffrent room")
     return await room_crud.leave_room(db, room_original=room, user_original=user)
+
+@router.post("/room/{room_id}/vote")
+async def register_vote(room_id: str, request: room_schemas.VoteRequest, db: AsyncSession = Depends(get_db)):
+    if request.rest_flag is False:
+        request.time = str(0)
+    if request.rest_flag is None:
+        request.time = str(0)
+    if request.time is None:
+        request.time = str(0)
+    request.room_id = room_id
+    return await room_crud.register_vote(db, request)
+
+@router.get("/room/{room_id}/vote/{turn}")
+async def vote_result(room_id: str, turn: int, db: AsyncSession = Depends(get_db)):
+    vote_list = await room_crud.get_vote_by_turn(db, room_id, turn)
+    vote_time_list = [vote[0].time for vote in vote_list]
+    res_time = random.choice(vote_time_list)
+    print(vote_time_list)
+    return {"res_time": res_time, "vote_time_list": vote_time_list}    
