@@ -29,7 +29,10 @@ class User(Base):
     status = Column(String(1024), default="player")
     room_id = Column(UUIDType(binary=False), ForeignKey("room.id"), nullable=True)
     is_host = Column(Boolean, default=False)
+    progress = Column(Integer, default=0)
     room = relationship("Room", back_populates="user", uselist=False)
+    # task = relationship("Task", back_populates="user")
+
  
 class Vote(Base):
     __tablename__ = "vote"

@@ -10,7 +10,7 @@ from api.db import get_db
 router = APIRouter()
 
 @router.get("/tasks", response_model=List[task_schema.Task])
-async def list_tasks(db: AsyncSession = Depends(get_db)):
+async def list_tasks_all(db: AsyncSession = Depends(get_db)):
   return await task_crud.get_tasks_with_done(db)
 
 @router.get("/{user_id}/tasks", response_model=List[task_schema.Task])

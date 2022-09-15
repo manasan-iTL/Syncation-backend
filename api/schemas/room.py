@@ -22,6 +22,7 @@ class UserRequest(BaseModel):
     status: str
     room_id: str
     is_host : bool
+    progress: int
     class Config():
         orm_mode = True
 
