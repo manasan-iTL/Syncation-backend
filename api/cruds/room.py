@@ -22,7 +22,7 @@ async def create_user(db: AsyncSession, request: room_schemas.UserRequest):
             username = request.username,
             status = request.status,
             is_host = request.is_host,
-            room_id = request.room_id # 追加
+            room_id = request.room_id, # 追加
             progress = request.progress
         )
     print(new_user.is_host)
