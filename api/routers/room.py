@@ -18,6 +18,7 @@ async def create_host(request_user: room_schemas.UserRequest, request_room: room
     room_id = await room_crud.create_room(db, request=request_room)
     request_user.room_id = room_id
     request_user.is_host = True # host権限付与用フラグ
+    request_user.progress = 0
     user = await update_user(db=db, user_id=user_id, user_body=request_user)
     return {"user_id": user_id, "room_id": room_id}
     # redirectはフロントで行う？

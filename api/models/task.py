@@ -8,8 +8,9 @@ class Task(Base):
     __tablename__ = "tasks"
     id = Column(Integer, primary_key=True)
     title = Column(String(1024))
+    user_id = Column(String(1024))
     done = relationship("Done", back_populates="task")
-
+    # user = relationship("User", back_populates="task")
 
 class Done(Base):
     __tablename__ = "dones"
