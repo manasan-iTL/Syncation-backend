@@ -13,6 +13,7 @@ async def create_user(db: AsyncSession, request: room_schemas.UserRequest):
         username = request.username,
         status = request.status,
         is_host = request.is_host,
+        progress = request.progress
     )
     print(new_user.is_host)
     db.add(new_user)
@@ -40,6 +41,7 @@ async def update_user(
     original.username = request.username
     original.status = request.status
     original.is_host = request.is_host
+    original.progress = request.progress
     db.add(original)
     await db.commit()
     await db.refresh(original)
