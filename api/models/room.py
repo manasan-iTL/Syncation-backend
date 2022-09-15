@@ -33,9 +33,10 @@ class User(Base):
  
 class Vote(Base):
     __tablename__ = "vote"
-    id = Column(UUIDType(binary=False), default=uuid.uuid4, unique=True, primary_key=True)
+    id = Column(Integer, primary_key=True)
     time = Column(String(1024))
     rest_flag = Column(Boolean, default=False)
     room_id = Column(UUIDType(binary=False), ForeignKey("room.id"), nullable=True)
+    turn = Column(Integer)
     room = relationship("Room", back_populates="vote", uselist=False)
 
