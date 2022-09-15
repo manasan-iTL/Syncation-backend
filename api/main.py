@@ -22,6 +22,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-socket_app = socketio.ASGIApp(websocket.sio)
+# socket_app = socketio.ASGIApp(websocket.sio)
 
-app.mount("/ws", socket_app)
+# app.mount("/ws", socket_app)
