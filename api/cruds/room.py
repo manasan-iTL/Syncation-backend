@@ -9,12 +9,22 @@ from sqlalchemy import select
 from sqlalchemy.engine import Result
 
 async def create_user(db: AsyncSession, request: room_schemas.UserRequest):
-    new_user = room_model.User(
-        username = request.username,
-        status = request.status,
-        is_host = request.is_host,
-        progress = request.progress
-    )
+    if request.is_host:
+        new_user = room_model.User(
+            username = request.username,
+            status = request.status,
+            is_host = request.is_host,
+            progress = request.progress
+            # room_id = request.room_id # 追加
+        )
+    else:
+        new_user = room_model.User(
+            username = request.username,
+            status = request.status,
+            is_host = request.is_host,
+            room_id = request.room_id, # 追加
+            progress = request.progress
+        )
     print(new_user.is_host)
     db.add(new_user)
     await db.commit()
